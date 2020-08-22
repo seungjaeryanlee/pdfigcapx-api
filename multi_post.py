@@ -19,7 +19,8 @@ async def fetch(session, paper_id):
 
 async def fetch_concurrent(paper_ids):
     loop = asyncio.get_event_loop()
-    async with aiohttp.ClientSession() as session:
+    connector = aiohttp.TCPConnector(limit=50)
+    async with aiohttp.ClientSession(connector=connector) as session:
         tasks = []
         for paper_id in paper_ids:
             tasks.append(loop.create_task(fetch(session, paper_id)))
